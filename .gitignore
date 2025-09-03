@@ -1,0 +1,65 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# The pub cache may be locked if you install packages from the command line.
+# These should not be checked into source tree.
+.dart_tool/
+
+# Flutter/Dart/Pub related
+**/doc/api/
+/build/
+
+# Android related
+**/android/**/GeneratedPluginRegistrant.java
+**/android/.gradle
+**/android/captures/
+**/android/gradlew
+**/android/gradlew.bat
+**/android/local.properties
+/android/app/release/
+
+# iOS/XCode related
+**/ios/**/*.mode1v3
+**/ios/**/*.mode2v3
+**/ios/**/*.moved-aside
+**/ios/**/*.pbxuser
+**/ios/**/*.perspectivev3
+**/ios/**/*sync/
+**/ios/**/.sconsign.dblite
+**/ios/**/.tags*
+**/ios/**/.vagrant/
+**/ios/DerivedData/
+**/ios/Flutter/Flutter.framework
+**/ios/Flutter/Flutter.podspec
+**/ios/Flutter/Generated.xcconfig
+**/ios/Flutter/app.flx
+**/ios/Flutter/app.framework
+**/ios/Flutter/ephemeral
+**/ios/Flutter/flutter_export_environment.sh
+**/ios/Flutter/flutter_assets/
+**/ios/Flutter/flutter_assets/Assets
+**/ios/Flutter/flutter_assets/AssetManifest.json
+**/ios/Flutter/flutter_assets/FontManifest.json
+**/ios/Flutter/flutter_assets/isolates/
+**/ios/Flutter/flutter_assets/kernel_blob.bin
+**/ios/Flutter/flutter_assets/vm_snapshot_data
+**/ios/Flutter/flutter_assets/vm_snapshot_instructions
+**/ios/ServiceDefinitions.json
+**/ios/Runner/GeneratedPluginRegistrant.*
+
+# Exceptions to above rules.
+/packages/flutter_tools/test/fixed_engine_path_fuchsia_linux.txt
