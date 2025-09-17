@@ -35,12 +35,9 @@ class _MainHubState extends State<MainHub> {
       body: AnimatedSwitcher(
         duration: const Duration(milliseconds: 600),
         transitionBuilder: (child, animation) {
-          return SlideTransition(
-            position: Tween<Offset>(
-              begin: const Offset(0.1, 0.1),
-              end: Offset.zero,
-            ).animate(CurvedAnimation(parent: animation, curve: Curves.easeOut)),
-            child: FadeTransition(opacity: animation, child: child),
+          return ScaleTransition(
+            scale: CurvedAnimation(parent: animation, curve: Curves.easeInOut),
+            child: child,
           );
         },
         child: _pages[_selectedIndex],
@@ -55,7 +52,7 @@ class _MainHubState extends State<MainHub> {
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.4),
+              color: Colors.black.withOpacity(0.5),
               blurRadius: 12,
               offset: const Offset(0, -3),
             ),
@@ -91,43 +88,91 @@ class HomePage extends StatelessWidget {
         key: const ValueKey("home"),
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color(0xFF0f2027), Color(0xFF203a43), Color(0xFF2c5364)],
+            colors: [Color(0xFF1f4037), Color(0xFF99f2c8)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
         ),
-        child: ListView(
-          padding: const EdgeInsets.all(20),
-          children: [
-            const Text("🏡 Featured Products",
-                style: TextStyle(
-                    fontSize: 26,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold)),
-            const SizedBox(height: 20),
-            for (int i = 1; i <= 3; i++)
-              Card(
-                margin: const EdgeInsets.symmetric(vertical: 10),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15)),
-                child: ListTile(
-                  leading: CircleAvatar(
-                      backgroundColor: Colors.blueGrey,
-                      child: Text("$i", style: const TextStyle(color: Colors.white))),
-                  title: Text("Product $i"),
-                  subtitle: const Text("A cool item to buy"),
-                  trailing: ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.amber,
-                        foregroundColor: Colors.black,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12))),
-                    child: const Text("Add"),
+        child: SafeArea(
+          child: Column(
+            children: [
+              const Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Text("✨ Featured Products",
+                    style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white)),
+              ),
+              Expanded(
+                child: GridView.builder(
+                  padding: const EdgeInsets.all(16),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2, childAspectRatio: 0.75, crossAxisSpacing: 15, mainAxisSpacing: 15),
+                  itemCount: 6,
+                  itemBuilder: (context, index) => Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.85),
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.black26,
+                            blurRadius: 8,
+                            offset: const Offset(2, 4))
+                      ],
+                    ),
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: ClipRRect(
+                            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+                            child: Image.network(
+                              "https://picsum.photos/200/200?random=$index",
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            children: [
+                              Text("Product ${index + 1}",
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16)),
+                              const SizedBox(height: 5),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: List.generate(
+                                    5,
+                                    (i) => Icon(Icons.star,
+                                        size: 16,
+                                        color: i < 4
+                                            ? Colors.amber
+                                            : Colors.grey)),
+                              ),
+                              const SizedBox(height: 8),
+                              ElevatedButton(
+                                onPressed: () {},
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.teal,
+                                  foregroundColor: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12)),
+                                ),
+                                child: const Text("Add to Cart"),
+                              )
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),
-          ],
+            ],
+          ),
         ),
       );
 }
@@ -145,63 +190,78 @@ class CartPage extends StatelessWidget {
             end: Alignment.bottomRight,
           ),
         ),
-        child: Column(
-          children: [
-            const SizedBox(height: 50),
-            const Text("🛍 Your Cart",
-                style: TextStyle(
-                    fontSize: 26,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold)),
-            const SizedBox(height: 20),
-            Expanded(
-              child: ListView.builder(
-                padding: const EdgeInsets.all(10),
-                itemCount: 2,
-                itemBuilder: (context, index) => Card(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15)),
-                  child: ListTile(
-                    leading: const Icon(Icons.shopping_bag, color: Colors.blue),
-                    title: Text("Cart Item ${index + 1}"),
-                    subtitle: const Text("Quantity: 1"),
-                    trailing: IconButton(
-                      icon: const Icon(Icons.delete, color: Colors.redAccent),
-                      onPressed: () {},
+        child: SafeArea(
+          child: Column(
+            children: [
+              const Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Text("🛍 Your Cart",
+                    style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white)),
+              ),
+              Expanded(
+                child: ListView.builder(
+                  padding: const EdgeInsets.all(12),
+                  itemCount: 3,
+                  itemBuilder: (context, index) => Card(
+                    margin: const EdgeInsets.symmetric(vertical: 10),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15)),
+                    child: ListTile(
+                      leading: ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: Image.network(
+                              "https://picsum.photos/100/100?random=$index",
+                              fit: BoxFit.cover)),
+                      title: Text("Cart Item ${index + 1}"),
+                      subtitle: const Text("Quantity: 1"),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                              onPressed: () {}, icon: const Icon(Icons.remove)),
+                          const Text("1"),
+                          IconButton(
+                              onPressed: () {}, icon: const Icon(Icons.add)),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.4),
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.5),
+                  borderRadius:
+                      const BorderRadius.vertical(top: Radius.circular(20)),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text("Total: \$249",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20)),
+                    ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.amber,
+                          foregroundColor: Colors.black,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 40, vertical: 15),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15))),
+                      child: const Text("Checkout"),
+                    ),
+                  ],
+                ),
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text("Total: \$120",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20)),
-                  ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.amber,
-                        foregroundColor: Colors.black,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 30, vertical: 12),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15))),
-                    child: const Text("Checkout"),
-                  ),
-                ],
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       );
 }
@@ -219,56 +279,71 @@ class ProfilePage extends StatelessWidget {
             end: Alignment.bottomRight,
           ),
         ),
-        child: ListView(
-          padding: const EdgeInsets.all(20),
-          children: [
-            const CircleAvatar(
-              radius: 60,
-              backgroundImage: NetworkImage(
-                  "https://i.pravatar.cc/300"), // dummy profile pic
-            ),
-            const SizedBox(height: 15),
-            const Center(
-                child: Text("John Doe",
-                    style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white))),
-            const SizedBox(height: 5),
-            const Center(
-                child: Text("john.doe@email.com",
-                    style: TextStyle(color: Colors.white70))),
-            const SizedBox(height: 20),
-            Card(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15)),
-              child: ListTile(
-                leading: const Icon(Icons.settings, color: Colors.blueGrey),
-                title: const Text("Account Settings"),
-                trailing: const Icon(Icons.arrow_forward_ios),
-                onTap: () {},
+        child: SafeArea(
+          child: ListView(
+            padding: const EdgeInsets.all(20),
+            children: [
+              const CircleAvatar(
+                radius: 60,
+                backgroundImage: NetworkImage("https://i.pravatar.cc/300"),
               ),
-            ),
-            Card(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15)),
-              child: ListTile(
-                leading: const Icon(Icons.history, color: Colors.green),
-                title: const Text("Order History"),
-                trailing: const Icon(Icons.arrow_forward_ios),
-                onTap: () {},
+              const SizedBox(height: 15),
+              const Center(
+                  child: Text("John Doe",
+                      style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white))),
+              const SizedBox(height: 5),
+              const Center(
+                  child: Text("john.doe@email.com",
+                      style: TextStyle(color: Colors.white70))),
+              const SizedBox(height: 30),
+
+              // Stats row
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  _buildStat("Orders", "12"),
+                  _buildStat("Wishlist", "8"),
+                  _buildStat("Rewards", "240"),
+                ],
               ),
-            ),
-            Card(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15)),
-              child: ListTile(
-                leading: const Icon(Icons.logout, color: Colors.red),
-                title: const Text("Logout"),
-                onTap: () {},
-              ),
-            ),
-          ],
+              const SizedBox(height: 30),
+
+              // Options
+              _buildProfileTile(Icons.settings, "Account Settings"),
+              _buildProfileTile(Icons.history, "Order History"),
+              _buildProfileTile(Icons.favorite, "Wishlist"),
+              _buildProfileTile(Icons.card_giftcard, "Rewards"),
+              _buildProfileTile(Icons.logout, "Logout", color: Colors.red),
+            ],
+          ),
         ),
       );
+
+  Widget _buildStat(String title, String value) {
+    return Column(
+      children: [
+        Text(value,
+            style: const TextStyle(
+                fontSize: 22, fontWeight: FontWeight.bold, color: Colors.amber)),
+        const SizedBox(height: 5),
+        Text(title, style: const TextStyle(color: Colors.white70)),
+      ],
+    );
+  }
+
+  Widget _buildProfileTile(IconData icon, String text,
+      {Color color = Colors.blueGrey}) {
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      child: ListTile(
+        leading: Icon(icon, color: color),
+        title: Text(text),
+        trailing: const Icon(Icons.arrow_forward_ios),
+        onTap: () {},
+      ),
+    );
+  }
 }
